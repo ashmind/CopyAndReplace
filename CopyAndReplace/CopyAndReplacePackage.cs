@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using EnvDTE;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -14,7 +15,9 @@ namespace CopyAndReplace {
     [Guid(GuidList.PackageString)]
     public sealed class CopyAndReplacePackage : Microsoft.VisualStudio.Shell.Package {
         private CopyAndReplaceController controller;
+        private DTE dte;
         private ProjectItemsEvents csItemsEvents;
+        private CommandEvents pasteEvent;
 
         /// <summary>
         /// Default constructor of the package.
@@ -35,10 +38,15 @@ namespace CopyAndReplace {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this), TraceCategory.Name);
             base.Initialize();
 
-            var dte = (DTE)GetService(typeof(DTE));
+            this.dte = (DTE)GetService(typeof(DTE));
             this.controller = new CopyAndReplaceController();
+
+            this.pasteEvent = this.dte.Events.CommandEvents[typeof(VSConstants.VSStd97CmdID).GUID.ToString("B"), (int)VSConstants.VSStd97CmdID.Paste];
+            this.pasteEvent.BeforeExecute += delegate { controller.HandleBeforePaste(); };
+            this.pasteEvent.AfterExecute += delegate { controller.HandleAfterPaste(); };
+
             this.csItemsEvents = (ProjectItemsEvents)dte.Events.GetObject("CSharpProjectItemsEvents");
-            this.csItemsEvents.ItemAdded += item => controller.ProcessPaste(item);
+            this.csItemsEvents.ItemAdded += item => controller.HandleAddedItem(item);
         }
     }
 }

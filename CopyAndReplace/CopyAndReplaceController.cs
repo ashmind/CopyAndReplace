@@ -14,23 +14,39 @@ namespace CopyAndReplace {
     public class CopyAndReplaceController {
         private const string CopyOf = "Copy of ";
 
-        //private HashSet<string> lastReplaceFileList;
-        private ReplacementViewModel lastReplaceViewModel;
-        private readonly Stopwatch timeSinceLastReplace = new Stopwatch(); // TEMPHACK
+        private bool inPaste = false;
+        private readonly IList<ProjectItem> pastedItems = new List<ProjectItem>();
+        
+        public void HandleBeforePaste() {
+            Trace.WriteLine("Before paste.", TraceCategory.Name);
+            inPaste = true;
+            pastedItems.Clear();
+        }
 
-        public void ProcessPaste(ProjectItem item) {
-            // HACK :)
-            if (!item.Name.StartsWith(CopyOf))
+        public void HandleAddedItem(ProjectItem item) {
+            if (!inPaste)
                 return;
 
-            Trace.WriteLine("Pasting '" + item.Name + "'.", TraceCategory.Name);
-            var viewModel = this.GetReplacementViewModel(item);
-            if (viewModel == null) // cancelled
-                return;
+            Trace.WriteLine("Pasted: " + item.Name, TraceCategory.Name);
+            pastedItems.Add(item);
+        }
+        
+        public void HandleAfterPaste() {
+            Trace.WriteLine("After paste: " + pastedItems.Count + " items to process.", TraceCategory.Name);
+            inPaste = false;
 
-            RenameAndReplace(item, viewModel.Pattern, viewModel.Replacement);
-            timeSinceLastReplace.Reset();
-            timeSinceLastReplace.Start();
+            if (pastedItems.Count == 0)
+                return;
+            
+            var viewModel = this.GetReplacementViewModel(pastedItems[0]);
+            if (viewModel == null) {
+                Trace.WriteLine("  Processing cancelled by user.", TraceCategory.Name);
+                return;
+            }
+
+            foreach (var item in pastedItems) {
+                RenameAndReplace(item, viewModel.Pattern, viewModel.Replacement);                
+            }
         }
 
         //private IEnumerable<string> GetFilesInClipboard() {
@@ -48,21 +64,6 @@ namespace CopyAndReplace {
 
         private ReplacementViewModel GetReplacementViewModel(ProjectItem item) {
             var originalName = GetNameBeforeCopy(item);
-            //var files = GetFilesInClipboard()
-            //                .Select(Path.GetFileName)
-            //                .ToSet(StringComparer.InvariantCultureIgnoreCase);
-
-            //if (lastReplaceFileList != null && lastReplaceFileList.SetEquals(files) && lastReplaceFileList.Contains(originalName) && ) {
-            //    Trace.WriteLine(originalName + "is in the same clipboard file list as previous file, using previous replacement settings.", TraceCategory.Name);
-            //    return lastReplaceViewModel;
-            //}
-
-            //lastReplaceFileList = files;
-
-            // TEMPHACK
-            if (lastReplaceViewModel != null && timeSinceLastReplace.ElapsedMilliseconds < 1000 && originalName.Contains(lastReplaceViewModel.Pattern))
-                return lastReplaceViewModel;
-
             var initialText = Path.GetFileNameWithoutExtension(originalName);
 
             var dialog = new ReplaceDialog {
@@ -75,9 +76,7 @@ namespace CopyAndReplace {
             if (!shouldReplace)
                 return null;
 
-            var viewModel = dialog.ViewModel;
-            lastReplaceViewModel = viewModel;
-            return viewModel;
+            return dialog.ViewModel;
         }
 
         private string GetNameBeforeCopy(ProjectItem item) {
@@ -85,7 +84,7 @@ namespace CopyAndReplace {
         }
 
         private void RenameAndReplace(ProjectItem item, string pattern, string replacement) {
-            Trace.WriteLine(string.Format("Renaming/replacing '{0}': '{1}' to '{2}'.", item.Name, pattern, replacement), TraceCategory.Name);
+            Trace.WriteLine(string.Format("  {0}: \"{1}\" -> \"{2}\".", item.Name, pattern, replacement), TraceCategory.Name);
             var nameBeforeCopy = GetNameBeforeCopy(item);
             var renamed = nameBeforeCopy.Replace(pattern, replacement);
 
