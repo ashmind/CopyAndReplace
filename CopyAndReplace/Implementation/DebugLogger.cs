@@ -8,7 +8,7 @@ namespace CopyAndReplace.Implementation {
     /// <summary>
     /// Logs same information to Trace of the debugging VS and Output window for the target VS.
     /// </summary>
-    public class DebugLogger {
+    public class DebugLogger : IDebugLogger {
         private readonly IVsOutputWindowPane output;
         private readonly string traceCategory;
 

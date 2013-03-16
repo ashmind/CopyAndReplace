@@ -18,7 +18,7 @@ namespace CopyAndReplace {
         private DTE dte;
         private ProjectItemsEvents csItemsEvents;
         private CommandEvents pasteEvent;
-        private DebugLogger logger;
+        private IDebugLogger logger;
 
         /// <summary>
         /// Default constructor of the package.
@@ -44,10 +44,6 @@ namespace CopyAndReplace {
             this.logger = new DebugLogger(output, VSPackageInfo.Name);
 
             this.controller = new Controller(this.logger);
-
-            //var clipboardHelper = (IVsUIHierWinClipboardHelper)GetService(typeof(SVsUIHierWinClipboardHelper));
-            //uint cookie;
-            //clipboardHelper.AdviseClipboardHelperEvents(new ClipboardHelperEventHandler(output), out cookie);
             
             this.pasteEvent = this.dte.Events.CommandEvents[typeof(VSConstants.VSStd97CmdID).GUID.ToString("B"), (int)VSConstants.VSStd97CmdID.Paste];
             this.pasteEvent.BeforeExecute += delegate { LogExceptions(() => controller.HandleBeforePaste()); };

@@ -11,13 +11,13 @@ using Microsoft.VisualStudio.Shell;
 
 namespace CopyAndReplace.Implementation {
     public class Controller {
-        private readonly DebugLogger logger;
+        private readonly IDebugLogger logger;
 
         private bool inPaste = false;
         private readonly IList<ProjectItem> pastedItems = new List<ProjectItem>();
         private IDictionary<FileInfo, string> filesInClipboardWithContent; 
 
-        public Controller(DebugLogger logger) {
+        public Controller(IDebugLogger logger) {
             this.logger = logger;
         }
 
@@ -54,9 +54,10 @@ namespace CopyAndReplace.Implementation {
                 this.logger.WriteLine("  Processing cancelled by user.");
                 return;
             }
-            
+
+            var replacer = new StringCaseAwareReplacer(viewModel.Pattern, viewModel.Replacement);
             foreach (var item in this.pastedItems) {
-                this.RenameAndReplace(item, filesBeforeCopy[item], viewModel.Pattern, viewModel.Replacement);                
+                this.RenameAndReplace(item, filesBeforeCopy[item], replacer);                
             }
         }
 
@@ -115,20 +116,32 @@ namespace CopyAndReplace.Implementation {
             return (string)item.Properties.Item("FullPath").Value;
         }
 
-        private void RenameAndReplace(ProjectItem item, FileInfo fileBeforeCopy, string pattern, string replacement) {
+        private void RenameAndReplace(ProjectItem item, FileInfo fileBeforeCopy, StringCaseAwareReplacer replacer) {
+            var loggedReplacements = new HashSet<string>();
+
             this.logger.WriteLine("  {0}:", item.Name);
             this.logger.WriteLine("    Copied from: {0}", fileBeforeCopy != null ? fileBeforeCopy.FullName : "<unknown>");
-            this.logger.WriteLine("    Replacing: \"{0}\" -> \"{1}\"", pattern, replacement);
+            var replacementUsedHandler = (EventHandler<ReplacementUsedEventArgs>)((sender, e) => {
+                if (loggedReplacements.Contains(e.Match))
+                    return;
+
+                this.logger.WriteLine("    Replacing: \"{0}\" -> \"{1}\"", e.Match, e.Replacement);
+                loggedReplacements.Add(e.Match);
+            });
+
+            replacer.ReplacementUsed += replacementUsedHandler;
 
             var canonicalName = fileBeforeCopy != null ? fileBeforeCopy.Name : item.Name;
-            var renamed = canonicalName.Replace(pattern, replacement);
+            var renamed = replacer.ReplaceAllIn(canonicalName);
 
             if (renamed != canonicalName)
                 item.Name = renamed;
 
             var fullPath = GetFullPath(item);
             var content = File.ReadAllText(this.GetFullPath(item));
-            File.WriteAllText(fullPath, content.Replace(pattern, replacement));
+            File.WriteAllText(fullPath, replacer.ReplaceAllIn(content));
+
+            replacer.ReplacementUsed -= replacementUsedHandler;
         }
     }
 }

@@ -116,10 +116,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementation\ClipboardHelperEventHandler.cs" />
+    <Compile Include="Implementation\StringCaseAwareReplacer.cs" />
     <Compile Include="Implementation\Controller.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Implementation\DebugLogger.cs" />
+    <Compile Include="Implementation\IDebugLogger.cs" />
+    <Compile Include="Implementation\ReplacementUsedEventArgs.cs" />
+    <Compile Include="Implementation\StringCase.cs" />
     <Compile Include="MPF\ExternDll.cs" />
     <Compile Include="MPF\NativeMethods.cs" />
     <Compile Include="MPF\InteropTypes.cs" />
