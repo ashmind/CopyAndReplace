@@ -116,8 +116,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CopyAndReplaceController.cs" />
+    <Compile Include="Implementation\ClipboardHelperEventHandler.cs" />
+    <Compile Include="Implementation\Controller.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="Implementation\DebugLogger.cs" />
     <Compile Include="MPF\ExternDll.cs" />
     <Compile Include="MPF\NativeMethods.cs" />
     <Compile Include="MPF\InteropTypes.cs" />
@@ -134,9 +136,13 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="CopyAndReplacePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PkgCmdID.cs" />
-    <Compile Include="TraceCategory.cs" />
+    <Compile Include="VSPackageInfo.cs" />
     <Compile Include="UI\ReplacementViewModel.cs" />
+    <Compile Include="VSPackage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VSPackage.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -147,6 +153,8 @@
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>VSPackage.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
