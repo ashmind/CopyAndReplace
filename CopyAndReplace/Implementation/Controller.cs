@@ -7,19 +7,17 @@ using CopyAndReplace.UI;
 using EnvDTE;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Utilities;
 
 namespace CopyAndReplace.Implementation {
     public class Controller {
-        private readonly ITextFileWraperFactory fileFactory;
+        private readonly ITextFileWrapperFactory fileFactory;
         private readonly IDebugLogger logger;
 
         private bool inPaste;
         private readonly IList<ProjectItem> pastedItems = new List<ProjectItem>();
         private IDictionary<FileInfo, string> filesInClipboardWithContent;
 
-        public Controller(ITextFileWraperFactory fileFactory, IDebugLogger logger)
+        public Controller(ITextFileWrapperFactory fileFactory, IDebugLogger logger)
         {
             this.fileFactory = fileFactory;
             this.logger = logger;

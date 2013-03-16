@@ -1,5 +1,5 @@
 ﻿namespace CopyAndReplace.Implementation {
-    public interface ITextFileWraperFactory {
+    public interface ITextFileWrapperFactory {
         ITextFileWrapper OpenFrom(string path);
     }
 }

@@ -47,7 +47,7 @@ namespace CopyAndReplace {
             this.InitializeLogger();
 
             var container = GetComponentModel();
-            var fileFactory = new TextDocumentWraperFactory(container.GetService<IFileExtensionRegistryService>(), container.GetService<ITextDocumentFactoryService>());
+            var fileFactory = new TextDocumentWrapperFactory(container.GetService<IFileExtensionRegistryService>(), container.GetService<ITextDocumentFactoryService>());
             this.controller = new Controller(fileFactory, this.logger);
             
             this.pasteEvent = this.dte.Events.CommandEvents[typeof(VSConstants.VSStd97CmdID).GUID.ToString("B"), (int)VSConstants.VSStd97CmdID.Paste];

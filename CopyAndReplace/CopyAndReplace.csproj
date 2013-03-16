@@ -119,7 +119,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementation\ITextFileWraperFactory.cs" />
+    <Compile Include="Implementation\ITextFileWrapperFactory.cs" />
     <Compile Include="Implementation\ITextFileWrapper.cs" />
     <Compile Include="Implementation\StringCaseAwareReplacer.cs" />
     <Compile Include="Implementation\Controller.cs" />
@@ -127,7 +127,7 @@
     <Compile Include="Implementation\DebugLogger.cs" />
     <Compile Include="Implementation\IDebugLogger.cs" />
     <Compile Include="Implementation\ReplacementUsedEventArgs.cs" />
-    <Compile Include="Implementation\TextDocumentWraperFactory.cs" />
+    <Compile Include="Implementation\TextDocumentWrapperFactory.cs" />
     <Compile Include="Implementation\TextFileWrapper.cs" />
     <Compile Include="MPF\ExternDll.cs" />
     <Compile Include="MPF\NativeMethods.cs" />

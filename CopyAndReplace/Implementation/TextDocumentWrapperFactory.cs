@@ -6,11 +6,11 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
 
 namespace CopyAndReplace.Implementation {
-    public class TextDocumentWraperFactory : ITextFileWraperFactory {
+    public class TextDocumentWrapperFactory : ITextFileWrapperFactory {
         private readonly IFileExtensionRegistryService fileExtensionRegistry;
         private readonly ITextDocumentFactoryService textDocumentFactory;
 
-        public TextDocumentWraperFactory(IFileExtensionRegistryService fileExtensionRegistry, ITextDocumentFactoryService textDocumentFactory) {
+        public TextDocumentWrapperFactory(IFileExtensionRegistryService fileExtensionRegistry, ITextDocumentFactoryService textDocumentFactory) {
             this.fileExtensionRegistry = fileExtensionRegistry;
             this.textDocumentFactory = textDocumentFactory;
         }
