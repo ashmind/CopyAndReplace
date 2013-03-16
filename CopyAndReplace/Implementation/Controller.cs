@@ -3,28 +3,40 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using AshMind.Extensions;
 using CopyAndReplace.UI;
 using EnvDTE;
 using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Utilities;
 
 namespace CopyAndReplace.Implementation {
     public class Controller {
+        private readonly ITextFileWraperFactory fileFactory;
         private readonly IDebugLogger logger;
 
-        private bool inPaste = false;
+        private bool inPaste;
         private readonly IList<ProjectItem> pastedItems = new List<ProjectItem>();
-        private IDictionary<FileInfo, string> filesInClipboardWithContent; 
+        private IDictionary<FileInfo, string> filesInClipboardWithContent;
 
-        public Controller(IDebugLogger logger) {
+        public Controller(ITextFileWraperFactory fileFactory, IDebugLogger logger)
+        {
+            this.fileFactory = fileFactory;
             this.logger = logger;
         }
 
         public void HandleBeforePaste() {
             this.inPaste = true;
             this.pastedItems.Clear();
-            this.filesInClipboardWithContent = GetFilesInClipboard().ToDictionary(path => new FileInfo(path), File.ReadAllText);
+            this.filesInClipboardWithContent = GetFilesInClipboard().ToDictionary(
+                path => new FileInfo(path),
+                path => {
+                    using (var wrapper = this.fileFactory.OpenFrom(path)) {
+                        return wrapper.ReadAllText(allowCached: true);
+                    }
+                }
+            );
+
             this.logger.WriteLine("Before paste: {0} items in clipboard:", this.filesInClipboardWithContent.Count);
             foreach (var file in this.filesInClipboardWithContent.Keys) {
                 this.logger.WriteLine("  " + file.FullName);
@@ -102,7 +114,9 @@ namespace CopyAndReplace.Implementation {
         }
 
         private FileInfo GetFileBeforeCopy(ProjectItem item) {
-            var itemContent = File.ReadAllText(GetFullPath(item));
+            string itemContent;
+            using (var wrapper = this.OpenFile(item))
+                itemContent = wrapper.ReadAllText(allowCached: true);
 
             return (
                 from candidate in filesInClipboardWithContent
@@ -112,8 +126,8 @@ namespace CopyAndReplace.Implementation {
             ).FirstOrDefault();
         }
         
-        private string GetFullPath(ProjectItem item) {
-            return (string)item.Properties.Item("FullPath").Value;
+        private ITextFileWrapper OpenFile(ProjectItem item) {
+            return fileFactory.OpenFrom((string)item.Properties.Item("FullPath").Value);
         }
 
         private void RenameAndReplace(ProjectItem item, FileInfo fileBeforeCopy, StringCaseAwareReplacer replacer) {
@@ -128,20 +142,23 @@ namespace CopyAndReplace.Implementation {
                 this.logger.WriteLine("    Replacing: \"{0}\" -> \"{1}\"", e.Match, e.Replacement);
                 loggedReplacements.Add(e.Match);
             });
+            
+            try {
+                replacer.ReplacementUsed += replacementUsedHandler;
+                var canonicalName = fileBeforeCopy != null ? fileBeforeCopy.Name : item.Name;
+                var renamed = replacer.ReplaceAllIn(canonicalName);
 
-            replacer.ReplacementUsed += replacementUsedHandler;
+                if (renamed != canonicalName)
+                    item.Name = renamed;
 
-            var canonicalName = fileBeforeCopy != null ? fileBeforeCopy.Name : item.Name;
-            var renamed = replacer.ReplaceAllIn(canonicalName);
-
-            if (renamed != canonicalName)
-                item.Name = renamed;
-
-            var fullPath = GetFullPath(item);
-            var content = File.ReadAllText(this.GetFullPath(item));
-            File.WriteAllText(fullPath, replacer.ReplaceAllIn(content));
-
-            replacer.ReplacementUsed -= replacementUsedHandler;
+                using (var wrapper = this.OpenFile(item)) {
+                    var content = wrapper.ReadAllText(allowCached: true);
+                    wrapper.WriteAllText(replacer.ReplaceAllIn(content));
+                }
+            }
+            finally {
+                replacer.ReplacementUsed -= replacementUsedHandler;
+            }
         }
     }
 }

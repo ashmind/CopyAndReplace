@@ -7,6 +7,16 @@ using AshMind.Extensions;
 namespace CopyAndReplace.Implementation {
     // not thread safe
     public class StringCaseAwareReplacer {
+        #region StringCase Enum
+        private enum StringCase {
+            Unknown,
+            Pascal,
+            Camel,
+            AllLower,
+            AllUpper
+        }
+        #endregion
+
         public event EventHandler<ReplacementUsedEventArgs> ReplacementUsed = delegate { };
 
         private readonly IDictionary<string, string> map = new Dictionary<string, string>();

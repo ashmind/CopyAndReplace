@@ -4,9 +4,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using CopyAndReplace.Implementation;
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Utilities;
 
 namespace CopyAndReplace {
     [PackageRegistration(UseManagedResourcesOnly = true)]
@@ -40,10 +44,11 @@ namespace CopyAndReplace {
             base.Initialize();
 
             this.dte = (DTE)GetService(typeof(DTE));
-            var output = this.GetOutputPane(GuidList.OutputPane, VSPackageInfo.Name + " (Diagnostic)");
-            this.logger = new DebugLogger(output, VSPackageInfo.Name);
+            this.InitializeLogger();
 
-            this.controller = new Controller(this.logger);
+            var container = GetComponentModel();
+            var fileFactory = new TextDocumentWraperFactory(container.GetService<IFileExtensionRegistryService>(), container.GetService<ITextDocumentFactoryService>());
+            this.controller = new Controller(fileFactory, this.logger);
             
             this.pasteEvent = this.dte.Events.CommandEvents[typeof(VSConstants.VSStd97CmdID).GUID.ToString("B"), (int)VSConstants.VSStd97CmdID.Paste];
             this.pasteEvent.BeforeExecute += delegate { LogExceptions(() => controller.HandleBeforePaste()); };
@@ -51,6 +56,17 @@ namespace CopyAndReplace {
 
             this.csItemsEvents = (ProjectItemsEvents)dte.Events.GetObject("CSharpProjectItemsEvents");
             this.csItemsEvents.ItemAdded += item => LogExceptions(() => controller.HandleAddedItem(item));
+        }
+
+        private void InitializeLogger() {
+            var output = this.GetOutputPane(GuidList.OutputPane, VSPackageInfo.Name + " (Diagnostic)");
+            this.logger = new DebugLogger(output, VSPackageInfo.Name);
+        } 
+        
+        private static IComponentModel GetComponentModel() {
+            var dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
+            var serviceProvider = new ServiceProvider((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte2);
+            return (IComponentModel)serviceProvider.GetService(typeof(SComponentModel));
         }
 
         private void LogExceptions(Action action) {

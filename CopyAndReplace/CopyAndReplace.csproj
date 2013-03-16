@@ -37,11 +37,14 @@
       <HintPath>..\$packages\AshMind.Extensions.1.0.4\lib\3.5\AshMind.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
+    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.10.0">
       <Private>false</Private>
@@ -116,13 +119,16 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implementation\ITextFileWraperFactory.cs" />
+    <Compile Include="Implementation\ITextFileWrapper.cs" />
     <Compile Include="Implementation\StringCaseAwareReplacer.cs" />
     <Compile Include="Implementation\Controller.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Implementation\DebugLogger.cs" />
     <Compile Include="Implementation\IDebugLogger.cs" />
     <Compile Include="Implementation\ReplacementUsedEventArgs.cs" />
-    <Compile Include="Implementation\StringCase.cs" />
+    <Compile Include="Implementation\TextDocumentWraperFactory.cs" />
+    <Compile Include="Implementation\TextFileWrapper.cs" />
     <Compile Include="MPF\ExternDll.cs" />
     <Compile Include="MPF\NativeMethods.cs" />
     <Compile Include="MPF\InteropTypes.cs" />
