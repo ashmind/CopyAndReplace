@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.VisualStudio.PlatformUI;
 
 namespace CopyAndReplace.UI {
@@ -9,6 +10,8 @@ namespace CopyAndReplace.UI {
     /// Interaction logic for ReplaceDialog.xaml
     /// </summary>
     public partial class ReplaceDialog : DialogWindow {
+        private string previousPatternText = "";
+
         public ReplaceDialog() {
             this.InitializeComponent();
         }
@@ -26,6 +29,14 @@ namespace CopyAndReplace.UI {
 
         private void buttonOk_Click(object sender, RoutedEventArgs e) {
             this.DialogResult = true;
+        }
+
+        private void textPattern_TextChanged(object sender, TextChangedEventArgs e) {
+            if (textReplacement.Text == previousPatternText)
+                textReplacement.Text = textPattern.Text;
+
+            previousPatternText = textPattern.Text;
+            buttonOk.IsEnabled = !string.IsNullOrEmpty(textPattern.Text);
         }
     }
 }

@@ -19,14 +19,25 @@
       </Grid.RowDefinitions>
     
       <Label>Pattern:</Label>
-      <TextBox Text="{Binding Path=(ui:ReplacementViewModel.Pattern)}" Margin="5 2 5 2" MinWidth="260" Grid.Column="1" />
+      <TextBox x:Name="textPattern"
+               Text="{Binding Path=(ui:ReplacementViewModel.Pattern)}"
+               TextChanged="textPattern_TextChanged"
+               Margin="5 2 5 2"
+               MinWidth="260"
+               Grid.Column="1" />
     
       <Label Grid.Row="1">Replace with:</Label>
-      <TextBox x:Name="textReplacement" Text="{Binding Path=(ui:ReplacementViewModel.Replacement)}" Margin="5 2 5 2" MinWidth="260" Grid.Row="1" Grid.Column="1" />
+      <TextBox x:Name="textReplacement"
+               Text="{Binding Path=(ui:ReplacementViewModel.Replacement)}"
+               Margin="5 2 5 2"
+               MinWidth="260"
+               Grid.Row="1"
+               Grid.Column="1" />
     </Grid>
 
     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-      <Button Width="75" Height="21"
+      <Button x:Name="buttonOk"
+              Width="75" Height="21"
               Margin="5 2 2 2"
               Grid.Row="2" Grid.ColumnSpan="2"
               Click="buttonOk_Click"
