@@ -44,8 +44,8 @@ The basic idea is that sometimes it is much easier to start with a similar class
 
   4. ####Does the replacement parse source code?
 
-    No. CopyAndReplace just does a text-baed replace, simple aside from smart casing.
-    However, given that the file being replaced is a new copy, there is no need to refactor references to it.
+    No. CopyAndReplace just does a simple text-based replace (aside from smart casing).
+    However, given that the file being changed is a new copy, there is no need to do any refactoring.
 
 ### Future plans
 
