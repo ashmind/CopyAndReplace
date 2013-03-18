@@ -46,7 +46,11 @@ The basic idea is that sometimes it is much easier to start with a similar class
 
     No. CopyAndReplace just does a simple text-based replace (aside from smart casing).
     However, given that the file being changed is a new copy, there is no need to do any refactoring.
+    
+  5. ####Does it support regular expressions?
+
+    No. But please feel free to create an issue if you feel it is important.
 
 ### Future plans
 
-Not really planning anything, please file any bugs/enhancement through Issues.
+Not really planning anything, please file any bugs/enhancements through Issues.
