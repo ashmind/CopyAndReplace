@@ -5,7 +5,10 @@ The basic idea is that sometimes it is much easier to start with a similar class
 
 ![]($about/screenshot.png)
 
-*Visual Studio Gallery link coming soon.*
+### Installation
+
+The extension can be installed from [Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/00590d25-79fe-483f-9f38-01d966da3517).  
+Only VS 2010 is supported at the moment, though I plan to enable VS 2012 soon.
 
 ### Q&A
 
