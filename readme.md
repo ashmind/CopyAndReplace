@@ -1,6 +1,6 @@
 ### Overview
 
-CopyAndReplace is a Visual Studio extension that gives you a change to rename and replace in files you have just copy/pasted.
+CopyAndReplace is a Visual Studio extension that gives you a chance to do rename and replace in files you have just copy/pasted.
 The basic idea is that sometimes it is much easier to start with a similar class and reduce/change it than to start with a blank file.
 
 ![]($about/screenshot.png)
@@ -8,7 +8,7 @@ The basic idea is that sometimes it is much easier to start with a similar class
 ### Installation
 
 The extension can be installed from [Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/00590d25-79fe-483f-9f38-01d966da3517).  
-Only VS 2010 is supported at the moment, though I plan to enable VS 2012 soon.
+Supported VS versions: 2010 and 2012.
 
 ### Q&A
 
@@ -53,6 +53,11 @@ Only VS 2010 is supported at the moment, though I plan to enable VS 2012 soon.
   5. ####Does it support regular expressions?
 
     No. But please feel free to create an issue if you feel it is important.
+    
+### Changelog
+
+#### 0.9.1
+Enabled support for VS 2012.
 
 ### Future plans
 

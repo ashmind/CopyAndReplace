@@ -3,13 +3,16 @@
   <Identifier Id="f6f2a4e2-b578-4e42-a3b8-7e12c7cb3092">
     <Name>CopyAndReplace</Name>
     <Author>Andrey Shchekin</Author>
-    <Version>0.9</Version>
-    <Description xml:space="preserve">CopyAndReplace is a Visual Studio extension that gives you a change to rename and replace in files you have just copy/pasted. The basic idea is that sometimes it is much easier to start with a similar class and reduce/change it than to start with a blank file.</Description>
+    <Version>0.9.1</Version>
+    <Description xml:space="preserve">CopyAndReplace is a Visual Studio extension that gives you a chance to do rename and replace in files you have just copy/pasted. The basic idea is that sometimes it is much easier to start with a similar class and reduce/change it than to start with a blank file.</Description>
     <Locale>1033</Locale>
     <PreviewImage>screenshot.png</PreviewImage>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="10.0">
+        <Edition>Pro</Edition>
+      </VisualStudio>
+      <VisualStudio Version="11.0">
         <Edition>Pro</Edition>
       </VisualStudio>
     </SupportedProducts>
