@@ -3,7 +3,7 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.10.0"
                    xmlns:ui="clr-namespace:CopyAndReplace.UI"
-                   Title="Replace"
+                   Title="Copy: Rename/Replace"
                    SizeToContent="WidthAndHeight" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
   
   <StackPanel Margin="5">
