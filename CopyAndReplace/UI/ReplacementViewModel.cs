@@ -6,8 +6,10 @@ using System.Linq;
 namespace CopyAndReplace.UI {
     public class ReplacementViewModel : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged = null;
+
         private string pattern;
         private string replacement;
+        //private bool useExactCase;
 
         public string Pattern {
             get { return this.pattern; }
@@ -18,6 +20,11 @@ namespace CopyAndReplace.UI {
             get { return this.replacement; }
             set { Set("Replacement", ref this.replacement, value); }
         }
+        
+        //public bool UseExactCase {
+        //    get { return this.useExactCase; }
+        //    set { Set("UseExactCase", ref this.useExactCase, value); }
+        //}
 
         protected void Set<T>(string propertyName, ref T field, T value) {
             if (Equals(field, value))

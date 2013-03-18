@@ -59,7 +59,8 @@ namespace CopyAndReplace.Implementation {
             }
 
             var filesBeforeCopy = this.pastedItems.ToDictionary(item => item, this.GetFileBeforeCopy);
-            var viewModel = this.GetReplacementViewModel(this.pastedItems[0], filesBeforeCopy[this.pastedItems[0]]);
+            var shortestNameItem = this.pastedItems.OrderBy(i => i.Name.Length).First();
+            var viewModel = this.GetReplacementViewModel(shortestNameItem, filesBeforeCopy[shortestNameItem]);
             if (viewModel == null) {
                 this.logger.WriteLine("  Processing cancelled by user.");
                 return;

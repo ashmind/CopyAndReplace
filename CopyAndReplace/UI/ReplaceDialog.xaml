@@ -3,8 +3,8 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.10.0"
                    xmlns:ui="clr-namespace:CopyAndReplace.UI"
-                   Title="Replace" SizeToContent="WidthAndHeight"
-                   WindowStyle="ToolWindow">
+                   Title="Replace"
+                   SizeToContent="WidthAndHeight" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
   
   <StackPanel Margin="5">
     <Grid VerticalAlignment="Top">
@@ -34,6 +34,47 @@
                Grid.Row="1"
                Grid.Column="1" />
     </Grid>
+
+    <!--Expander Header="Options" Margin="5 5 5 2">
+      <Grid Margin="0 5 0 0">
+        <Grid.Resources>
+          <TextBlock x:Key="exactCaseTip" MaxWidth="350" TextWrapping="Wrap">
+              By default, the match will be case insensitive and the replacement will attempt to keep
+            existing case. For example, replacing "PowerUser" with "Administrator" will also replace 
+            "powerUser" with "administrator", and "POWERUSER" with "ADMINISTRATOR".
+            <LineBreak />
+            <LineBreak />
+              This checkbox modifies the match behavior to only match exact case and replace strictly as 
+            specified in replacement. 
+          </TextBlock>
+        </Grid.Resources>
+        
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!- -
+        <CheckBox IsChecked="{Binding Path=(ui:ReplacementViewModel.UseRegex)}" Margin="5 5 5 2">Use regular expressions</CheckBox>
+        <TextBlock Foreground="Gray"
+                   Grid.Column="1"
+                   Margin="5 5 5 2">(standard .NET syntax)</TextBlock>
+        - ->
+        
+        <CheckBox IsChecked="{Binding Path=(ui:ReplacementViewModel.UseExactCase)}" Margin="5 2 5 5" Grid.Row="1" ToolTip="{StaticResource exactCaseTip}">Use exact case</CheckBox>
+        <TextBlock Foreground="Gray"
+                   ToolTip="{StaticResource exactCaseTip}"
+                   ToolTipService.InitialShowDelay="0"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   Margin="5 2 5 5">(hover for details)</TextBlock>
+      </Grid>
+    </Expander-->
 
     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
       <Button x:Name="buttonOk"

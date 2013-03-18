@@ -55,6 +55,7 @@ namespace CopyAndReplace.Implementation {
             if (matchCase == StringCase.Unknown)
                 return match.Value;
 
+            //match.
             return this.ConvertToCase(this.replacement, matchCase);
         }
 
